@@ -110,7 +110,7 @@ func applySingleFile(filePath string) error {
 		return fmt.Errorf("error applying resource: %w", err)
 	}
 
-	fmt.Printf("%s/%s configured\n", gvk.Kind, obj.GetName())
+	fmt.Printf("%s %s/%s\n", colorGreen("✔ configured"), gvk.Kind, colorBold(obj.GetName()))
 	return nil
 }
 
@@ -133,7 +133,7 @@ func applyAllFiles() error {
 	for _, file := range files {
 		err := applySingleFile(file)
 		if err != nil {
-			errors = append(errors, fmt.Sprintf("  ✗ %s: %v", file, err))
+			errors = append(errors, fmt.Sprintf("  %s %s: %v", colorRed("✗"), file, err))
 		} else {
 			applied++
 		}
@@ -145,7 +145,7 @@ func applyAllFiles() error {
 			fmt.Println(e)
 		}
 	} else {
-		fmt.Printf("\nAll %d file(s) applied successfully.\n", applied)
+		fmt.Printf("\nAll %d file(s) applied %s\n", applied, colorGreen("successfully."))
 	}
 
 	return nil

@@ -26,6 +26,7 @@ Designed as a streamlined, developer-friendly alternative to `kubectl`, it strip
 
 🚀 **Blazing Fast**: Compiled directly to single-binary machine code using Go.  
 💻 **Cross-Platform**: Ready-to-use binaries for Windows and Linux (WSL).  
+🎨 **Beautiful Color UI**: Easily distinguish resource health with green (Running), yellow (Pending), and red (Failed) statuses powered by `fatih/color`.  
 🛠️ **Server-Side Apply (SSA)**: Uses native dynamic clients to robustly create, update, and patch complex YAML structures without needing hardcoded schemas.  
 🎯 **"All" Commands**: Bulk-target resources to save time! Supports `get all`, `apply -f all`, and `delete all` within any namespace.  
 🧹 **Clean Visuals**: Tabular output strictly focused on the critical metadata (Status, Age, Replicas, IPs).
@@ -44,7 +45,7 @@ There are two ways to get **knoxctl** running on your system.
 
 ```bash
 # Download the latest Linux binary
-wget https://github.com/Rupeshs11/knoxctl/releases/download/v1.0.0/knoxctl-linux-amd64 -O knoxctl
+wget https://github.com/Rupeshs11/knoxctl/releases/download/v1.1.0/knoxctl-linux-amd64 -O knoxctl
 
 # Make it executable
 chmod +x knoxctl
@@ -98,22 +99,28 @@ go build -o knoxctl.exe .   # For Windows
 knoxctl [command] [flags]
 ```
 
-### 🔍 1. Read Operations (`get`)
+### 🔍 1. Inspection & Read Operations (`get`, `describe`, `logs`, `version`)
 
-Instantly fetch the status of your workloads.
+Instantly fetch the status and details of your workloads.
 
-| Command                   | Description                                  |
-| ------------------------- | -------------------------------------------- |
-| `knoxctl get pods`        | List pods in a namespace                     |
-| `knoxctl get deployments` | List deployments in a namespace              |
-| `knoxctl get svc`         | List services in a namespace                 |
-| `knoxctl get nodes`       | List all active nodes in the cluster         |
-| `knoxctl get ns`          | List all namespaces                          |
-| **`knoxctl get all`**     | **List all pods, deployments, and services** |
+| Command                         | Description                                                   |
+| ------------------------------- | ------------------------------------------------------------- |
+| `knoxctl get pods`              | List pods in a namespace                                      |
+| `knoxctl get deployments`       | List deployments in a namespace                               |
+| `knoxctl get svc`               | List services in a namespace                                  |
+| `knoxctl get nodes`             | List all active nodes in the cluster                          |
+| `knoxctl get ns`                | List all namespaces                                           |
+| **`knoxctl get all`**           | **List all pods, deployments, and services**                  |
+| `knoxctl describe <res> <name>` | Deep dive into a specific resource's configuration and events |
+| `knoxctl logs <pod>`            | Stream container logs (Supports `-f`, `--tail`)               |
+| `knoxctl version`               | Print CLI version & cluster server version                    |
 
 **📸 In Action:**
 
 <div align="center">
+  <p><i>Checking the CLI version:</i></p>
+  <img src="assets/version.png" alt="Version Command Output" width="800"/>
+  <br><br>
   <p><i>Getting detailed pod, deployment, and service metadata across all namespaces:</i></p>
   <img src="assets/get%20all%20from%20all%20namespaces.png" alt="Get All Namespaces" width="800"/>
   <br><br>

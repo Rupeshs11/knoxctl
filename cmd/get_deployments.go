@@ -40,9 +40,9 @@ var getDeploymentsCmd = &cobra.Command{
 		w := tabwriter.NewWriter(os.Stdout, 0, 8, 2, ' ', 0)
 
 		if allNamespaces {
-			fmt.Fprintln(w, "NAMESPACE\tNAME\tREADY\tUP-TO-DATE\tAVAILABLE\tAGE")
+			fmt.Fprintln(w, colorHeader("NAMESPACE\tNAME\tREADY\tUP-TO-DATE\tAVAILABLE\tAGE"))
 		} else {
-			fmt.Fprintln(w, "NAME\tREADY\tUP-TO-DATE\tAVAILABLE\tAGE")
+			fmt.Fprintln(w, colorHeader("NAME\tREADY\tUP-TO-DATE\tAVAILABLE\tAGE"))
 		}
 
 		for _, deploy := range deployments.Items {
@@ -50,16 +50,16 @@ var getDeploymentsCmd = &cobra.Command{
 			if deploy.Spec.Replicas != nil {
 				desired = *deploy.Spec.Replicas
 			}
-			ready := fmt.Sprintf("%d/%d", deploy.Status.ReadyReplicas, desired)
+			ready := replicaColor(deploy.Status.ReadyReplicas, desired)
 			age := formatAge(deploy.CreationTimestamp.Time)
 
 			if allNamespaces {
 				fmt.Fprintf(w, "%s\t%s\t%s\t%d\t%d\t%s\n",
-					deploy.Namespace, deploy.Name, ready, deploy.Status.UpdatedReplicas,
+					deploy.Namespace, colorBold(deploy.Name), ready, deploy.Status.UpdatedReplicas,
 					deploy.Status.AvailableReplicas, age)
 			} else {
 				fmt.Fprintf(w, "%s\t%s\t%d\t%d\t%s\n",
-					deploy.Name, ready, deploy.Status.UpdatedReplicas,
+					colorBold(deploy.Name), ready, deploy.Status.UpdatedReplicas,
 					deploy.Status.AvailableReplicas, age)
 			}
 		}

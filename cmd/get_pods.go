@@ -41,9 +41,9 @@ var getPodsCmd = &cobra.Command{
 		w := tabwriter.NewWriter(os.Stdout, 0, 8, 2, ' ', 0)
 
 		if allNamespaces {
-			fmt.Fprintln(w, "NAMESPACE\tNAME\tREADY\tSTATUS\tRESTARTS\tAGE")
+			fmt.Fprintln(w, colorHeader("NAMESPACE\tNAME\tREADY\tSTATUS\tRESTARTS\tAGE"))
 		} else {
-			fmt.Fprintln(w, "NAME\tREADY\tSTATUS\tRESTARTS\tAGE")
+			fmt.Fprintln(w, colorHeader("NAME\tREADY\tSTATUS\tRESTARTS\tAGE"))
 		}
 
 		for _, pod := range pods.Items {
@@ -75,10 +75,10 @@ var getPodsCmd = &cobra.Command{
 
 			if allNamespaces {
 				fmt.Fprintf(w, "%s\t%s\t%s\t%s\t%d\t%s\n",
-					pod.Namespace, pod.Name, ready, status, restartCount, age)
+					pod.Namespace, colorBold(pod.Name), ready, podStatusColor(status), restartCount, age)
 			} else {
 				fmt.Fprintf(w, "%s\t%s\t%s\t%d\t%s\n",
-					pod.Name, ready, status, restartCount, age)
+					colorBold(pod.Name), ready, podStatusColor(status), restartCount, age)
 			}
 		}
 

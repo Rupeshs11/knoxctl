@@ -42,11 +42,11 @@ var getAllCmd = &cobra.Command{
 		w := tabwriter.NewWriter(os.Stdout, 0, 8, 2, ' ', 0)
 
 		if len(pods.Items) > 0 {
-			fmt.Println("=== Pods ===")
+			fmt.Println(colorHeader("=== Pods ==="))
 			if allNamespaces {
-				fmt.Fprintln(w, "NAMESPACE\tNAME\tREADY\tSTATUS\tRESTARTS\tAGE")
+				fmt.Fprintln(w, colorHeader("NAMESPACE\tNAME\tREADY\tSTATUS\tRESTARTS\tAGE"))
 			} else {
-				fmt.Fprintln(w, "NAME\tREADY\tSTATUS\tRESTARTS\tAGE")
+				fmt.Fprintln(w, colorHeader("NAME\tREADY\tSTATUS\tRESTARTS\tAGE"))
 			}
 
 			for _, pod := range pods.Items {
@@ -78,10 +78,10 @@ var getAllCmd = &cobra.Command{
 
 				if allNamespaces {
 					fmt.Fprintf(w, "%s\t%s\t%s\t%s\t%d\t%s\n",
-						pod.Namespace, pod.Name, ready, status, restartCount, age)
+						pod.Namespace, colorBold(pod.Name), ready, podStatusColor(status), restartCount, age)
 				} else {
 					fmt.Fprintf(w, "%s\t%s\t%s\t%d\t%s\n",
-						pod.Name, ready, status, restartCount, age)
+						colorBold(pod.Name), ready, podStatusColor(status), restartCount, age)
 				}
 			}
 			w.Flush()
@@ -94,13 +94,13 @@ var getAllCmd = &cobra.Command{
 		}
 
 		if len(deployments.Items) > 0 {
-			fmt.Println("=== Deployments ===")
+			fmt.Println(colorHeader("=== Deployments ==="))
 			w = tabwriter.NewWriter(os.Stdout, 0, 8, 2, ' ', 0)
 
 			if allNamespaces {
-				fmt.Fprintln(w, "NAMESPACE\tNAME\tREADY\tUP-TO-DATE\tAVAILABLE\tAGE")
+				fmt.Fprintln(w, colorHeader("NAMESPACE\tNAME\tREADY\tUP-TO-DATE\tAVAILABLE\tAGE"))
 			} else {
-				fmt.Fprintln(w, "NAME\tREADY\tUP-TO-DATE\tAVAILABLE\tAGE")
+				fmt.Fprintln(w, colorHeader("NAME\tREADY\tUP-TO-DATE\tAVAILABLE\tAGE"))
 			}
 
 			for _, deploy := range deployments.Items {
@@ -108,17 +108,16 @@ var getAllCmd = &cobra.Command{
 				if deploy.Spec.Replicas != nil {
 					desired = *deploy.Spec.Replicas
 				}
-				ready := fmt.Sprintf("%d/%d", deploy.Status.ReadyReplicas, desired)
 				age := formatAge(deploy.CreationTimestamp.Time)
 
 				if allNamespaces {
 					fmt.Fprintf(w, "%s\t%s\t%s\t%d\t%d\t%s\n",
-						deploy.Namespace, deploy.Name, ready, deploy.Status.UpdatedReplicas,
-						deploy.Status.AvailableReplicas, age)
+						deploy.Namespace, colorBold(deploy.Name), replicaColor(deploy.Status.ReadyReplicas, desired),
+						deploy.Status.UpdatedReplicas, deploy.Status.AvailableReplicas, age)
 				} else {
 					fmt.Fprintf(w, "%s\t%s\t%d\t%d\t%s\n",
-						deploy.Name, ready, deploy.Status.UpdatedReplicas,
-						deploy.Status.AvailableReplicas, age)
+						colorBold(deploy.Name), replicaColor(deploy.Status.ReadyReplicas, desired),
+						deploy.Status.UpdatedReplicas, deploy.Status.AvailableReplicas, age)
 				}
 			}
 			w.Flush()
@@ -131,13 +130,13 @@ var getAllCmd = &cobra.Command{
 		}
 
 		if len(services.Items) > 0 {
-			fmt.Println("=== Services ===")
+			fmt.Println(colorHeader("=== Services ==="))
 			w = tabwriter.NewWriter(os.Stdout, 0, 8, 2, ' ', 0)
 
 			if allNamespaces {
-				fmt.Fprintln(w, "NAMESPACE\tNAME\tTYPE\tCLUSTER-IP\tEXTERNAL-IP\tPORT(S)\tAGE")
+				fmt.Fprintln(w, colorHeader("NAMESPACE\tNAME\tTYPE\tCLUSTER-IP\tEXTERNAL-IP\tPORT(S)\tAGE"))
 			} else {
-				fmt.Fprintln(w, "NAME\tTYPE\tCLUSTER-IP\tEXTERNAL-IP\tPORT(S)\tAGE")
+				fmt.Fprintln(w, colorHeader("NAME\tTYPE\tCLUSTER-IP\tEXTERNAL-IP\tPORT(S)\tAGE"))
 			}
 
 			for _, svc := range services.Items {

@@ -34,7 +34,7 @@ var getNodesCmd = &cobra.Command{
 		}
 
 		w := tabwriter.NewWriter(os.Stdout, 0, 8, 2, ' ', 0)
-		fmt.Fprintln(w, "NAME\tSTATUS\tROLES\tAGE\tVERSION")
+		fmt.Fprintln(w, colorHeader("NAME\tSTATUS\tROLES\tAGE\tVERSION"))
 
 		for _, node := range nodes.Items {
 			status := "NotReady"
@@ -65,7 +65,7 @@ var getNodesCmd = &cobra.Command{
 			version := node.Status.NodeInfo.KubeletVersion
 
 			fmt.Fprintf(w, "%s\t%s\t%s\t%s\t%s\n",
-				node.Name, status, roleStr, age, version)
+				colorBold(node.Name), nodeStatusColor(status), roleStr, age, version)
 		}
 
 		w.Flush()

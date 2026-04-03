@@ -71,35 +71,35 @@ var deleteCmd = &cobra.Command{
 			if err != nil {
 				return fmt.Errorf("error deleting pod %s: %w", resourceName, err)
 			}
-			fmt.Printf("pod \"%s\" deleted\n", resourceName)
+			fmt.Printf("%s %s\n", colorGreen("pod"), colorBold("\"" + resourceName + "\" deleted"))
 
 		case "deployment", "deployments", "deploy":
 			err = client.AppsV1().Deployments(ns).Delete(context.TODO(), resourceName, metav1.DeleteOptions{})
 			if err != nil {
 				return fmt.Errorf("error deleting deployment %s: %w", resourceName, err)
 			}
-			fmt.Printf("deployment.apps \"%s\" deleted\n", resourceName)
+			fmt.Printf("%s %s\n", colorGreen("deployment.apps"), colorBold("\"" + resourceName + "\" deleted"))
 
 		case "service", "services", "svc":
 			err = client.CoreV1().Services(ns).Delete(context.TODO(), resourceName, metav1.DeleteOptions{})
 			if err != nil {
 				return fmt.Errorf("error deleting service %s: %w", resourceName, err)
 			}
-			fmt.Printf("service \"%s\" deleted\n", resourceName)
+			fmt.Printf("%s %s\n", colorGreen("service"), colorBold("\"" + resourceName + "\" deleted"))
 
 		case "namespace", "namespaces", "ns":
 			err = client.CoreV1().Namespaces().Delete(context.TODO(), resourceName, metav1.DeleteOptions{})
 			if err != nil {
 				return fmt.Errorf("error deleting namespace %s: %w", resourceName, err)
 			}
-			fmt.Printf("namespace \"%s\" deleted\n", resourceName)
+			fmt.Printf("%s %s\n", colorGreen("namespace"), colorBold("\"" + resourceName + "\" deleted"))
 
 		case "node", "nodes", "no":
 			err = client.CoreV1().Nodes().Delete(context.TODO(), resourceName, metav1.DeleteOptions{})
 			if err != nil {
 				return fmt.Errorf("error deleting node %s: %w", resourceName, err)
 			}
-			fmt.Printf("node \"%s\" deleted\n", resourceName)
+			fmt.Printf("%s %s\n", colorGreen("node"), colorBold("\"" + resourceName + "\" deleted"))
 
 		default:
 			return fmt.Errorf("error: unknown resource type \"%s\"\nSupported: pod, deployment, service, namespace, node, all", resourceType)
@@ -230,7 +230,7 @@ func deleteFromFile() error {
 		return fmt.Errorf("error deleting resource: %w", err)
 	}
 
-	fmt.Printf("%s \"%s\" deleted\n", strings.ToLower(gvk.Kind), obj.GetName())
+	fmt.Printf("%s %s\n", colorGreen(strings.ToLower(gvk.Kind)), colorBold("\"" + obj.GetName() + "\" deleted"))
 	return nil
 }
 
